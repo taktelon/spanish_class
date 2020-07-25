@@ -4,6 +4,9 @@
 This is the simple application to testing Spanish verb forms.
 All practising verbs are stored in Verbs.xlsx. You can refer the example in xls file.
 
+## Data
+In excel, you can put the verb with correct form. If cell is blank, app will change the proper form with regular form change, like "hablar" -> "hablo" (for "yo")
+
 ## How to play
 1. Run main.py
 2. It will show subject and verb
