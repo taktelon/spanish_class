@@ -32,11 +32,13 @@ suffix_ir = {
 }
 
 # initialize vers data sheel
-wb = xl.load_workbook("Verbs.xlsx")
+wb = xl.load_workbook("Spanish.xlsx")
 sheet = wb["verbs"]
+sheet_words = wb["words"]
 cell_yo = sheet.cell(1, 2)
 max_row = sheet.max_row
-max_column = sheet.max_column
+max_row_words = sheet_words.max_row
+max_column = sheet.max_column - 1
 print(f"total {max_row - 1} verbs to practise")
 
 
@@ -72,8 +74,16 @@ def quiz_creator():
     return quiz_subject, quiz_verb, quiz_answer
 
 
+def quiz_creator_word():
+    quiz_word_row = random.randint(1, max_row_words)
+    quiz_word_word = sheet_words.cell(quiz_word_row, 2).value
+    quiz_word_answer = sheet_words.cell(quiz_word_row, 1).value
+    return "WORD", quiz_word_word, quiz_word_answer
+
+
 while True:
-    subject, verb, answer = quiz_creator()
+    # subject, verb, answer = quiz_creator()
+    subject, verb, answer = quiz_creator_word()
     your_answer = input(f"[{subject}][{verb}] -> ").lower()
     if your_answer == "quit":
         break
