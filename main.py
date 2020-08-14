@@ -41,6 +41,20 @@ max_row_words = sheet_words.max_row
 max_column = sheet.max_column - 1
 print(f"total {max_row - 1} verbs to practise")
 
+uniq_counter = set()
+
+
+def get_unique_selection():
+    for i in range(10):
+        selected_row = random.randint(2, max_row)
+        uniq_counter.add(selected_row)
+        if selected_row not in uniq_counter:
+            uniq_counter.add(selected_row)
+            break
+        else:
+            selected_row = random.randint(2, max_row)
+    return selected_row
+
 
 def get_reflect_verb(verb_reflect, sub):
     verb_reflect_formed = get_regular_verb_form(verb_reflect, sub)
@@ -63,8 +77,8 @@ def get_regular_verb_form(verb_regular, sub):
     return head
 
 
-def quiz_creator():
-    quiz_row = random.randint(2, max_row)
+def quiz_creator_verbs():
+    quiz_row = get_unique_selection()
     quiz_column = random.randint(2, max_column)
     quiz_subject = sheet.cell(1, quiz_column).value
     quiz_verb = sheet.cell(quiz_row, 1).value
@@ -81,9 +95,21 @@ def quiz_creator_word():
     return "WORD", quiz_word_word, quiz_word_answer
 
 
+your_choice = input("Chose [v]erbs or [w]ords: ").lower()
+if your_choice == "v":
+    choice = "verbs"
+elif your_choice == "w":
+    choice = "words"
+else:
+    print("Sorry, you don't feel learning...")
+    exit(1)
+
 while True:
     # subject, verb, answer = quiz_creator()
-    subject, verb, answer = quiz_creator_word()
+    if choice == "verbs":
+        subject, verb, answer = quiz_creator_verbs()
+    elif choice == "words":
+        subject, verb, answer = quiz_creator_word()
     your_answer = input(f"[{subject}][{verb}] -> ").lower()
     if your_answer == "quit":
         break
