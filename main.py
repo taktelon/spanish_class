@@ -1,6 +1,25 @@
 import random
 import openpyxl as xl
 
+
+class UniqueCounter:
+    def __init__(self, min_num, max_num):
+        self.min_num = min_num
+        self.max_num = max_num
+        self.unique_counter = set()
+
+    def get_unique_number(self):
+        for i in range(10):
+            selected_number = random.randint(self.min_num, self.max_num)
+            self.unique_counter.add(selected_number)
+            if selected_number not in self.unique_counter:
+                self.unique_counter.add(selected_number)
+                break
+            else:
+                selected_number = random.randint(self.min_num, self.max_num)
+        return selected_number
+
+
 reflection = {
     "yo": "me",
     "vos": "te",
@@ -41,20 +60,6 @@ max_row_words = sheet_words.max_row
 max_column = sheet.max_column - 1
 print(f"total {max_row - 1} verbs to practise")
 
-uniq_counter = set()
-
-
-def get_unique_selection():
-    for i in range(10):
-        selected_row = random.randint(2, max_row)
-        uniq_counter.add(selected_row)
-        if selected_row not in uniq_counter:
-            uniq_counter.add(selected_row)
-            break
-        else:
-            selected_row = random.randint(2, max_row)
-    return selected_row
-
 
 def get_reflect_verb(verb_reflect, sub):
     verb_reflect_formed = get_regular_verb_form(verb_reflect, sub)
@@ -77,8 +82,7 @@ def get_regular_verb_form(verb_regular, sub):
     return head
 
 
-def quiz_creator_verbs():
-    quiz_row = get_unique_selection()
+def quiz_creator_verbs(quiz_row):
     quiz_column = random.randint(2, max_column)
     quiz_subject = sheet.cell(1, quiz_column).value
     quiz_verb = sheet.cell(quiz_row, 1).value
@@ -88,8 +92,7 @@ def quiz_creator_verbs():
     return quiz_subject, quiz_verb, quiz_answer
 
 
-def quiz_creator_word():
-    quiz_word_row = random.randint(1, max_row_words)
+def quiz_creator_word(quiz_word_row):
     quiz_word_word = sheet_words.cell(quiz_word_row, 2).value
     quiz_word_answer = sheet_words.cell(quiz_word_row, 1).value
     return "WORD", quiz_word_word, quiz_word_answer
@@ -98,8 +101,10 @@ def quiz_creator_word():
 your_choice = input("Chose [v]erbs or [w]ords: ").lower()
 if your_choice == "v":
     choice = "verbs"
+    counter = UniqueCounter(2, max_row)
 elif your_choice == "w":
     choice = "words"
+    counter = UniqueCounter(1, max_row_words)
 else:
     print("Sorry, you don't feel learning...")
     exit(1)
@@ -107,9 +112,9 @@ else:
 while True:
     # subject, verb, answer = quiz_creator()
     if choice == "verbs":
-        subject, verb, answer = quiz_creator_verbs()
+        subject, verb, answer = quiz_creator_verbs(counter.get_unique_number())
     elif choice == "words":
-        subject, verb, answer = quiz_creator_word()
+        subject, verb, answer = quiz_creator_word(counter.get_unique_number())
     your_answer = input(f"[{subject}][{verb}] -> ").lower()
     if your_answer == "quit":
         break
